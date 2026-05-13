@@ -15,6 +15,7 @@ const NAV = [
   { id: 'campaigns',  icon: '📋', label: 'Campaigns'      },
   { id: 'videos',     icon: '🎬', label: 'Video Projects' },
   { id: 'experience', icon: '💼', label: 'Experience'     },
+  { id: 'skills',     icon: '🛠️', label: 'Skills'         },
   { id: 'about',      icon: '👤', label: 'About'          },
   { id: 'seed',       icon: '🗄️', label: 'Seed Data'      },
 ];
@@ -234,6 +235,7 @@ export default function AdminPage() {
         {tab === 'campaigns'  && <Campaigns      data={data} saveCampaigns={saveCampaigns} />}
         {tab === 'videos'     && <VideoProjects  data={data} save={save} flash={flash} setData={setData} />}
         {tab === 'experience' && <Experience     data={data} save={save} />}
+        {tab === 'skills'     && <Skills         data={data} save={save} />}
         {tab === 'about'      && <About          data={data} save={save} />}
         {tab === 'seed'       && <SeedData       setData={setData} flash={flash} />}
       </main>
@@ -651,6 +653,48 @@ function About({ data, save }) {
       </div>
 
       <button className="btn btn-gold" onClick={() => save('about', form)}>💾 Save Changes</button>
+    </>
+  );
+}
+
+/* ════════════════════════════════════════════════════════════
+   TAB: SKILLS & EXPERTISE
+════════════════════════════════════════════════════════════ */
+function Skills({ data, save }) {
+  const [text, setText] = useState((data.skills || []).join(', '));
+
+  const handleSave = () => {
+    const skillsArray = text.split(',').map(s => s.trim()).filter(Boolean);
+    save('skills', skillsArray);
+  };
+
+  return (
+    <>
+      <h2 className="admin-page-title">Skills & Expertise</h2>
+
+      <div className="admin-section">
+        <div className="admin-section-title">Edit Skills</div>
+        <p style={{ color: 'var(--muted)', fontSize: '0.9rem', marginBottom: '1.5rem', lineHeight: 1.6 }}>
+          Enter your skills separated by <strong style={{ color: 'var(--fg)' }}>commas</strong>. 
+          Each item will appear as a premium tag in the "Skills & Expertise" section on your homepage.
+        </p>
+
+        <div className="form-group">
+          <label className="form-label">Skills List (Comma Separated)</label>
+          <textarea 
+            className="form-input" 
+            rows={10} 
+            value={text} 
+            onChange={e => setText(e.target.value)}
+            placeholder="Premiere Pro, After Effects, Influencer Campaigns, Creator Briefing..."
+            style={{ fontFamily: 'inherit', lineHeight: 1.6 }}
+          />
+        </div>
+
+        <button className="btn btn-gold" onClick={handleSave}>
+          💾 Save Skills & Tags
+        </button>
+      </div>
     </>
   );
 }
