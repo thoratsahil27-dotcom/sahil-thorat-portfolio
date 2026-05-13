@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { 
-  Instagram, Linkedin, Youtube, MapPin
+  Instagram, Linkedin, Youtube, MapPin, Mail, Phone
 } from 'lucide-react';
 import { getData, getYoutubeId, getYoutubeThumbnail } from './lib/store';
 import Papa from 'papaparse';
@@ -522,14 +522,39 @@ export default function Home() {
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 1.5rem' }}>
           <h2 className="reveal" style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '1rem', letterSpacing: '-0.03em' }}>Let's Work Together</h2>
           <p className="reveal reveal-delay-1" style={{ fontSize: '1rem', maxWidth: 560, lineHeight: 1.7, marginBottom: '2.5rem' }}>{about.bio}</p>
+          
           <div className="reveal reveal-delay-2" style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '3rem' }}>
             {about.email && (
-              <a href={`mailto:${about.email}`} className="btn btn-outline">{about.email}</a>
+              <a href={`mailto:${about.email}`} className="btn btn-outline">
+                <Mail size={18} style={{ color: 'var(--gold)' }} />
+                {about.email}
+              </a>
             )}
             {about.phone && (
-              <a href={`tel:${about.phone}`} className="btn btn-outline">{about.phone}</a>
+              <a href={`tel:${about.phone}`} className="btn btn-outline">
+                <Phone size={18} style={{ color: 'var(--gold)' }} />
+                {about.phone}
+              </a>
             )}
           </div>
+
+          <div className="reveal reveal-delay-3" style={{ display: 'flex', gap: '1.5rem', marginBottom: '4rem' }}>
+            {[
+              { url: heroStats.instagramUrl, icon: <Instagram size={20} />, label: 'Instagram' },
+              { url: heroStats.linkedinUrl,  icon: <Linkedin size={20} />,  label: 'LinkedIn' },
+              { url: heroStats.youtubeUrl,   icon: <Youtube size={20} />,   label: 'YouTube' },
+            ].filter(s => s.url).map(s => (
+              <a key={s.label} href={s.url} target="_blank" rel="noopener noreferrer" 
+                style={{ color: 'var(--muted)', transition: 'all 0.3s ease' }}
+                onMouseOver={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.transform = 'translateY(-3px)'; }}
+                onMouseOut={e => { e.currentTarget.style.color = 'var(--muted)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                title={s.label}
+              >
+                {s.icon}
+              </a>
+            ))}
+          </div>
+
           <p style={{ fontSize: '0.8rem', color: '#333' }}>© 2026 Sahil Thorat. All rights reserved.</p>
         </div>
       </footer>
