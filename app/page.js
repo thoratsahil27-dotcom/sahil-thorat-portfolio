@@ -202,15 +202,11 @@ export default function Home() {
             SAHIL THORAT
           </h1>
 
-          <div className="hero-animate-3" style={{ 
-            fontSize: '0.9rem', color: 'var(--muted)', marginBottom: '4.5rem', 
-            fontWeight: 500, letterSpacing: '0.15em', textTransform: 'uppercase',
-            display: 'flex', gap: '1.5rem', justifyContent: 'center', flexWrap: 'wrap'
-          }}>
+          <div className="hero-animate-3 hero-titles-container">
             <span>Influencer Marketer</span>
-            <span style={{ opacity: 0.3 }}>·</span>
+            <span className="hero-sep">·</span>
             <span>Video Producer</span>
-            <span style={{ opacity: 0.3 }}>·</span>
+            <span className="hero-sep">·</span>
             <span>Content Creator</span>
           </div>
 
