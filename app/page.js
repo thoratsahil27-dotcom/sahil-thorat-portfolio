@@ -233,20 +233,22 @@ export default function Home() {
               { url: heroStats.instagramUrl, label: 'Instagram', icon: <Instagram size={16} /> },
               { url: heroStats.linkedinUrl,  label: 'LinkedIn',  icon: <Linkedin size={16} /> },
               { url: heroStats.youtubeUrl,   label: 'YouTube',   icon: <Youtube size={16} /> },
+              { url: about.email ? `mailto:${about.email}` : null, label: 'Email', icon: <Mail size={16} /> },
+              { url: about.phone ? `tel:${about.phone}` : null, label: 'Contact', icon: <Phone size={16} /> },
             ].filter(s => s.url).map(s => (
               <a key={s.label} href={s.url} target="_blank" rel="noopener noreferrer" 
                 style={{ 
-                  display: 'flex', alignItems: 'center', gap: '0.6rem',
+                   display: 'flex', alignItems: 'center', gap: '0.6rem',
                   padding: '0.75rem 1.75rem', borderRadius: '2rem',
                   fontSize: '0.85rem', fontWeight: 600, border: '1px solid rgba(255,255,255,0.1)',
                   background: 'rgba(255,255,255,0.02)', color: 'var(--muted)',
                   transition: 'all 0.3s ease'
                 }}
-                onMouseOver={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = '#fff'; }}
-                onMouseOut={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; e.currentTarget.style.color = 'var(--muted)'; }}
+                onMouseOver={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = '#fff'; e.currentTarget.style.borderColor = 'rgba(245,197,24,0.3)'; }}
+                onMouseOut={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; e.currentTarget.style.color = 'var(--muted)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }}
               >
                 {s.icon}
-                {s.label} ↗
+                {s.label}
               </a>
             ))}
           </div>
