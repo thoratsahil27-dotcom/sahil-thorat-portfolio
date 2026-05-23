@@ -28,8 +28,10 @@ export default function AdminPage() {
   const [loginErr, setLoginErr] = useState('');
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
   const [showPass, setShowPass] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
     setAuthed(isLoggedIn());
     
     // Load initial data from Firebase
@@ -45,6 +47,9 @@ export default function AdminPage() {
 
     return () => unsubscribe();
   }, []);
+
+  // ── MOUNT CHECK (Hydration Fix) ─────────────────────────────
+  if (!isMounted) return <div style={{ minHeight: '100vh', background: 'var(--bg)' }} />;
 
   // ── LOGIN SCREEN ────────────────────────────────────────────
   if (!authed) {
