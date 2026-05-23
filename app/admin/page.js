@@ -2,6 +2,22 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+  useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { getData, updateSection, resetData, login, logout, isLoggedIn, parseCampaignCsv } from '../lib/store';
 import { db } from '../lib/firebase';
 import { ref, set, onValue } from 'firebase/database';
@@ -366,6 +382,44 @@ function Campaigns({ data, saveCampaigns }) {
 /* ════════════════════════════════════════════════════════════
    TAB: VIDEO PROJECTS
 ════════════════════════════════════════════════════════════ */
+function SortableProject({ p, openManage, openEdit, deleteProject }) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+  } = useSortable({ id: p.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} className="vp-card">
+      <div className="vp-card-header" style={{ display: 'flex', alignItems: 'flex-start' }}>
+        <div {...attributes} {...listeners} style={{ cursor: 'grab', marginRight: '1rem', marginTop: '0.2rem', fontSize: '1.2rem', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
+          ☰
+        </div>
+        <div>
+          <div className="vp-tags">
+            {p.tags.map(t => <span key={t} className="tag">{t}</span>)}
+          </div>
+          <h3 style={{ margin: '0.4rem 0 0.2rem', fontSize: '1.1rem' }}>{p.title}</h3>
+          <div className="vp-desc">{p.description}</div>
+          <div className="vp-count">{(p.videos || []).length} video(s) added</div>
+        </div>
+      </div>
+      <div className="vp-actions">
+        <button className="btn btn-gold btn-sm" onClick={() => openManage(p)}>🎬 Manage Videos</button>
+        <button className="btn btn-outline btn-sm" onClick={() => openEdit(p)}>✏️ Edit Project</button>
+        <button className="btn btn-danger btn-sm" onClick={() => deleteProject(p.id)}>🗑 Delete</button>
+      </div>
+    </div>
+  );
+}
+
 function VideoProjects({ data, save, flash, setData }) {
   const [projects, setProjects] = useState([...(data.videoProjects || [])]);
   const [modal, setModal] = useState(null); // { type: 'project'|'videos', project?, isEdit }
@@ -427,6 +481,25 @@ function VideoProjects({ data, save, flash, setData }) {
     persist(projects.map(p => p.id === updated.id ? updated : p));
   };
 
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      const oldIndex = projects.findIndex(p => p.id === active.id);
+      const newIndex = projects.findIndex(p => p.id === over.id);
+      
+      const updated = arrayMove(projects, oldIndex, newIndex);
+      persist(updated);
+    }
+  };
+
   return (
     <>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
@@ -434,25 +507,26 @@ function VideoProjects({ data, save, flash, setData }) {
         <button className="btn btn-gold btn-sm" onClick={openAdd}>+ Add Project</button>
       </div>
 
-      {projects.map(p => (
-        <div key={p.id} className="vp-card">
-          <div className="vp-card-header">
-            <div>
-              <div className="vp-tags">
-                {p.tags.map(t => <span key={t} className="tag">{t}</span>)}
-              </div>
-              <h3 style={{ margin: '0.4rem 0 0.2rem', fontSize: '1.1rem' }}>{p.title}</h3>
-              <div className="vp-desc">{p.description}</div>
-              <div className="vp-count">{(p.videos || []).length} video(s) added</div>
-            </div>
-          </div>
-          <div className="vp-actions">
-            <button className="btn btn-gold btn-sm" onClick={() => openManage(p)}>🎬 Manage Videos</button>
-            <button className="btn btn-outline btn-sm" onClick={() => openEdit(p)}>✏️ Edit Project</button>
-            <button className="btn btn-danger btn-sm" onClick={() => deleteProject(p.id)}>🗑 Delete</button>
-          </div>
-        </div>
-      ))}
+      <DndContext 
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext 
+          items={projects.map(p => p.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          {projects.map(p => (
+            <SortableProject 
+              key={p.id} 
+              p={p} 
+              openManage={openManage} 
+              openEdit={openEdit} 
+              deleteProject={deleteProject} 
+            />
+          ))}
+        </SortableContext>
+      </DndContext>
 
       {/* ADD/EDIT PROJECT MODAL */}
       {modal?.type === 'project' && (
