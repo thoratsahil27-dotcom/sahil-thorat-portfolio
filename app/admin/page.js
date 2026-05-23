@@ -705,12 +705,21 @@ function Skills({ data, save }) {
 function SeedData({ setData, flash }) {
   const [confirmed, setConfirmed] = useState(false);
 
-  const handleReset = () => {
+  const handleReset = async () => {
     if (!confirmed) { setConfirmed(true); return; }
     const fresh = resetData();
-    setData(fresh);
-    setConfirmed(false);
-    flash('Database reset to defaults!');
+    try {
+      const portfolioRef = ref(db, 'portfolio_content');
+      await set(portfolioRef, fresh);
+      setData(fresh);
+      setConfirmed(false);
+      flash('Database reset to defaults and synced to Firebase! ✨');
+    } catch (err) {
+      console.error("Firebase sync error:", err);
+      setData(fresh);
+      setConfirmed(false);
+      flash('Local save only - Firebase error');
+    }
   };
 
   return (

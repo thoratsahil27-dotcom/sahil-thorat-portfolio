@@ -184,72 +184,69 @@ export default function Home() {
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 1.5rem' }}>
 
         {/* ── HERO ─────────────────────────────────────────────────── */}
-        <section style={{ padding: '10rem 0 8rem', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <p className="hero-animate-1" style={{ 
-            fontSize: '0.65rem', fontWeight: 600, letterSpacing: '0.3em', 
-            textTransform: 'uppercase', color: 'var(--muted)', marginBottom: '2.5rem',
-            display: 'flex', alignItems: 'center', gap: '0.6rem'
+        <section style={{ padding: '12rem 0 8rem', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+          <p className="stagger-item" style={{ 
+            fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.15em', 
+            textTransform: 'uppercase', color: 'var(--muted)', marginBottom: '1.5rem',
+            '--stagger-i': 1 
           }}>
-            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--gold)', boxShadow: '0 0 10px var(--gold)' }} />
-            MUMBAI, INDIA — AVAILABLE FOR PROJECTS
+            Available for Projects
           </p>
           
-          <h1 className="hero-animate-2" style={{ 
-            marginBottom: '1.5rem', lineHeight: 1, 
-            fontSize: 'clamp(3rem, 10vw, 6.5rem)', fontWeight: 700,
-            letterSpacing: '0.15em', textTransform: 'uppercase'
+          <h1 className="stagger-item" style={{ 
+            marginBottom: '1.5rem',
+            maxWidth: '900px',
+            textTransform: 'uppercase',
+            '--stagger-i': 2
           }}>
             SAHIL THORAT
           </h1>
 
-          <div className="hero-animate-3 hero-titles-container">
-            <span>Influencer Marketer</span>
-            <span className="hero-sep">·</span>
-            <span>Video Producer</span>
-            <span className="hero-sep">·</span>
-            <span>Content Creator</span>
+          <div className="stagger-item" style={{ 
+            fontSize: '1.25rem', color: 'var(--muted)', marginBottom: '4rem', maxWidth: '600px',
+            '--stagger-i': 3
+          }}>
+            Influencer Marketer, Video Producer, and Content Creator based in Mumbai.
           </div>
 
-          {/* Stats — Minimal layout with counting effect */}
-          <div className="hero-animate-4" style={{ 
-            display: 'flex', gap: '3rem', marginBottom: '5rem', 
-            flexWrap: 'wrap', justifyContent: 'center' 
+          {/* Social buttons — Button Hierarchy (Impeccable) */}
+          <div className="stagger-item" style={{ 
+            display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center', marginBottom: '6rem',
+            '--stagger-i': 4
           }}>
-            {[1,2,3,4].map(n => (
-              <div key={n} style={{ textAlign: 'center', minWidth: '100px' }}>
-                <div style={{ fontSize: '2.2rem', fontWeight: 700, color: '#fff', marginBottom: '0.25rem' }}>
-                  <CountUp end={heroStats[`stat${n}Value`] || 0} suffix="+" />
-                </div>
-                <div style={{ fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--muted)' }}>
-                  {heroStats[`stat${n}Label`] || `Stat ${n}`}
-                </div>
-              </div>
+            {/* Primary Action */}
+            {about.email && (
+              <a href={`mailto:${about.email}`} className="btn btn-gold" style={{ padding: '0.8rem 2rem', fontSize: '1rem' }}>
+                <Mail size={18} /> Let's Talk
+              </a>
+            )}
+            {/* Secondary Actions (Ghost) */}
+            {[
+              { url: heroStats.instagramUrl, label: 'Instagram', icon: <Instagram size={18} /> },
+              { url: heroStats.linkedinUrl,  label: 'LinkedIn',  icon: <Linkedin size={18} /> },
+              { url: heroStats.youtubeUrl,   label: 'YouTube',   icon: <Youtube size={18} /> },
+            ].filter(s => s.url).map(s => (
+              <a key={s.label} href={s.url} target="_blank" rel="noopener noreferrer" className="btn btn-ghost" style={{ padding: '0.8rem', borderRadius: '50%' }}>
+                {s.icon}
+              </a>
             ))}
           </div>
 
-          {/* Social buttons — Pill shape with icons */}
-          <div className="hero-animate-5" style={{ display: 'flex', gap: '1.25rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-            {[
-              { url: heroStats.instagramUrl, label: 'Instagram', icon: <Instagram size={16} /> },
-              { url: heroStats.linkedinUrl,  label: 'LinkedIn',  icon: <Linkedin size={16} /> },
-              { url: heroStats.youtubeUrl,   label: 'YouTube',   icon: <Youtube size={16} /> },
-              { url: about.email ? `mailto:${about.email}` : null, label: 'Email', icon: <Mail size={16} /> },
-              { url: about.phone ? `tel:${about.phone}` : null, label: 'Contact', icon: <Phone size={16} /> },
-            ].filter(s => s.url).map(s => (
-              <a key={s.label} href={s.url} target="_blank" rel="noopener noreferrer" 
-                style={{ 
-                   display: 'flex', alignItems: 'center', gap: '0.6rem',
-                  padding: '0.75rem 1.75rem', borderRadius: '2rem',
-                  fontSize: '0.85rem', fontWeight: 600, border: '1px solid rgba(255,255,255,0.1)',
-                  background: 'rgba(255,255,255,0.02)', color: 'var(--muted)',
-                  transition: 'all 0.3s ease'
-                }}
-                onMouseOver={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = '#fff'; e.currentTarget.style.borderColor = 'rgba(245,197,24,0.3)'; }}
-                onMouseOut={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; e.currentTarget.style.color = 'var(--muted)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }}
-              >
-                {s.icon}
-                {s.label}
-              </a>
+          {/* Stats — Minimal Grid */}
+          <div className="stagger-item" style={{ 
+            display: 'flex', gap: '4rem', flexWrap: 'wrap',
+            paddingTop: '3rem', borderTop: '1px solid var(--border)', width: '100%',
+            '--stagger-i': 5
+          }}>
+            {[1,2,3,4].map(n => (
+              <div key={n} style={{ minWidth: '100px' }}>
+                <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--fg)', marginBottom: '0.25rem', letterSpacing: '-0.03em' }}>
+                  <CountUp end={heroStats[`stat${n}Value`] || 0} suffix="+" />
+                </div>
+                <div style={{ fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.05em', color: 'var(--muted)' }}>
+                  {heroStats[`stat${n}Label`] || `Stat ${n}`}
+                </div>
+              </div>
             ))}
           </div>
         </section>
@@ -331,21 +328,25 @@ export default function Home() {
                           {creators.map((c, ci) => {
                             const handle = extractHandle(c.profile);
                             return (
-                              <div key={ci} style={{
+                              <div key={ci} className="campaign-creator-item" style={{
                                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                                 padding: '1rem 1.5rem',
                                 borderBottom: ci < creators.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none',
                                 flexWrap: 'wrap', gap: '0.75rem',
-                                animation: 'slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both',
-                                animationDelay: `${ci * 0.08}s`,
-                              }}>
+                                animation: 'slideUp 0.6s var(--ease-drawer) both',
+                                animationDelay: `${ci * 0.06}s`,
+                                transition: 'background 0.3s var(--ease-out)',
+                              }}
+                              onMouseOver={e => e.currentTarget.style.background = 'rgba(255,255,255,0.02)'}
+                              onMouseOut={e => e.currentTarget.style.background = 'transparent'}
+                              >
                                 <div style={{ flex: 1, minWidth: '150px' }}>
-                                  <div style={{ fontWeight: 600, fontSize: '0.95rem' }}>{c.creator}</div>
+                                  <div style={{ fontWeight: 600, fontSize: '0.95rem', transition: 'color 0.2s', letterSpacing: '-0.01em' }}>{c.creator}</div>
                                   {handle && (
                                     <a href={c.profile} target="_blank" rel="noopener noreferrer"
-                                      style={{ color: 'var(--gold)', fontSize: '0.82rem', display: 'inline-block', marginTop: '0.2rem', opacity: 0.9, transition: 'opacity 0.2s' }}
-                                      onMouseOver={e => e.target.style.opacity = 1}
-                                      onMouseOut={e => e.target.style.opacity = 0.9}
+                                      style={{ color: 'var(--gold)', fontSize: '0.82rem', display: 'inline-block', marginTop: '0.2rem', opacity: 0.9, transition: 'all 0.2s var(--ease-out)' }}
+                                      onMouseOver={e => { e.target.style.opacity = 1; e.target.style.transform = 'translateX(2px)'; }}
+                                      onMouseOut={e => { e.target.style.opacity = 0.9; e.target.style.transform = 'translateX(0)'; }}
                                     >
                                       {handle}
                                     </a>
