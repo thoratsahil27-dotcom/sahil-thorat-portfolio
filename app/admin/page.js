@@ -414,7 +414,7 @@ function VideoProjects({ data, save, flash, setData }) {
   const addVideo = () => {
     if (!newVideoUrl) return;
     const vid = { id: uid(), url: newVideoUrl.trim(), title: newVideoTitle.trim() || 'Untitled' };
-    const updated = { ...manageProject, videos: [...manageProject.videos, vid] };
+    const updated = { ...manageProject, videos: [...(manageProject.videos || []), vid] };
     setManageProject(updated);
     persist(projects.map(p => p.id === updated.id ? updated : p));
     setNewVideoUrl('');
@@ -422,7 +422,7 @@ function VideoProjects({ data, save, flash, setData }) {
   };
 
   const deleteVideo = (vidId) => {
-    const updated = { ...manageProject, videos: manageProject.videos.filter(v => v.id !== vidId) };
+    const updated = { ...manageProject, videos: (manageProject.videos || []).filter(v => v.id !== vidId) };
     setManageProject(updated);
     persist(projects.map(p => p.id === updated.id ? updated : p));
   };
@@ -443,7 +443,7 @@ function VideoProjects({ data, save, flash, setData }) {
               </div>
               <h3 style={{ margin: '0.4rem 0 0.2rem', fontSize: '1.1rem' }}>{p.title}</h3>
               <div className="vp-desc">{p.description}</div>
-              <div className="vp-count">{p.videos.length} video(s) added</div>
+              <div className="vp-count">{(p.videos || []).length} video(s) added</div>
             </div>
           </div>
           <div className="vp-actions">
@@ -492,10 +492,10 @@ function VideoProjects({ data, save, flash, setData }) {
             </div>
 
             <div className="video-list">
-              {manageProject.videos.length === 0 && (
+              {!(manageProject.videos && manageProject.videos.length > 0) && (
                 <p style={{ color: 'var(--muted)', fontSize: '0.88rem' }}>No videos yet. Add one below.</p>
               )}
-              {manageProject.videos.map(v => (
+              {(manageProject.videos || []).map(v => (
                 <div key={v.id} className="video-list-item">
                   {v.url.includes('youtube') || v.url.includes('youtu.be')
                     ? <img src={`https://img.youtube.com/vi/${v.url.match(/(?:v=|youtu\.be\/)([A-Za-z0-9_-]{11})/)?.[1]}/default.jpg`} className="video-list-thumb" alt="" />
